@@ -16,3 +16,8 @@ func StoreManage_out(storeName string, name string) (err error) {
 	_, err = DB.Exec("delete from ? where goods_name=?", storeName, name)
 	return err
 }
+
+func StoreManage_stock(storename string, goodsname string, changenum int) (err error) {
+	_, err = DB.Exec("update ? set goods_num=goods_num+? where goods_name=?", storename, changenum, goodsname)
+	return err
+}

@@ -75,3 +75,25 @@ func GoodsManage_out(c *gin.Context) {
 	}
 	util.RespOK(c)
 }
+
+func GoodsManage_stock(c *gin.Context) {
+	err := tool.Check_login_state(c)
+	if err != nil {
+		return
+	}
+	StoreHouseName := c.PostForm("storehouse name")
+	GoodsName := c.PostForm("goods name")
+	ChangeNum := c.PostForm("change")
+	changenum, err := strconv.Atoi(ChangeNum)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	err = service.StoreManage_stock(StoreHouseName, GoodsName, changenum)
+	if err != nil && err != sql.ErrNoRows { //这里没有处理找不到货物的情况，，，主要是先把大框弄好再说
+		log.Printf("search message error:%v", err)
+		util.RsepInternalErr(c)
+		return
+	}
+	util.RespOK(c)
+}

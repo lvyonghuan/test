@@ -14,6 +14,7 @@ func InitRouter() {
 		storehouse.POST("create", Create)
 		storehouse.POST("goodsin", GoodsManage_in)
 		storehouse.POST("/goodsout", GoodsManage_out)
+		storehouse.POST("/goodsstock", GoodsManage_stock)
 	}
 	r.Run()
 }
