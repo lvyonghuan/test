@@ -8,24 +8,13 @@ import (
 	"strconv"
 	"test/program/2/model"
 	"test/program/2/service"
+	"test/program/2/tool"
 	"test/program/2/util"
 )
 
 func Create(c *gin.Context) {
-	cookie, err := c.Cookie("LoginState")
-	if err != nil && err != sql.ErrNoRows {
-		log.Printf("search message error:%v", err)
-		util.RsepInternalErr(c)
-		return
-	}
-	_, err = service.SearchUsernameByCookie(cookie)
+	err := tool.Check_login_state(c)
 	if err != nil {
-		if err.Error() == "用户未登录或登陆状态失效" {
-			util.NormErr(c, 20013, "用户未登录或登陆状态失效")
-			return
-		}
-		log.Printf("search message error:%v", err)
-		util.RsepInternalErr(c)
 		return
 	}
 	StoreHouseName := c.PostForm("storehouse name")
@@ -42,21 +31,9 @@ func Create(c *gin.Context) {
 	util.RespOK(c)
 }
 
-func GoodsManage_on(c *gin.Context) {
-	cookie, err := c.Cookie("LoginState")
-	if err != nil && err != sql.ErrNoRows {
-		log.Printf("search message error:%v", err)
-		util.RsepInternalErr(c)
-		return
-	}
-	_, err = service.SearchUsernameByCookie(cookie)
+func GoodsManage_in(c *gin.Context) {
+	err := tool.Check_login_state(c)
 	if err != nil {
-		if err.Error() == "用户未登录或登陆状态失效" {
-			util.NormErr(c, 20013, "用户未登录或登陆状态失效")
-			return
-		}
-		log.Printf("search message error:%v", err)
-		util.RsepInternalErr(c)
 		return
 	}
 	StoreHouseName := c.PostForm("storehouse name")
@@ -71,11 +48,27 @@ func GoodsManage_on(c *gin.Context) {
 		util.RespParamErr(c)
 		return
 	}
-	err = service.StoreManage_on(StoreHouseName, model.Storehouse{
+	err = service.StoreManage_in(StoreHouseName, model.Storehouse{
 		GoodsName: GoodsName,
 		GoodsNum:  goodsnum,
 	})
 	if err != nil && err != sql.ErrNoRows {
+		log.Printf("search message error:%v", err)
+		util.RsepInternalErr(c)
+		return
+	}
+	util.RespOK(c)
+}
+
+func GoodsManage_out(c *gin.Context) {
+	err := tool.Check_login_state(c)
+	if err != nil {
+		return
+	}
+	StoreHouseName := c.PostForm("storehouse name")
+	GoodsName := c.PostForm("goods name")
+	err = service.StoreManage_out(StoreHouseName, GoodsName)
+	if err != nil && err != sql.ErrNoRows { //这里没有处理找不到货物的情况，，，主要是先把大框弄好再说
 		log.Printf("search message error:%v", err)
 		util.RsepInternalErr(c)
 		return

@@ -12,7 +12,7 @@ func InitRouter() {
 	storehouse := r.Group("/storehouse")
 	{
 		storehouse.POST("create", Create)
-		storehouse.POST("goodson", GoodsManage_on)
+		storehouse.POST("goodson", GoodsManage_in)
 	}
 	r.Run()
 }

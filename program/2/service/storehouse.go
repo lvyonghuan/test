@@ -10,7 +10,12 @@ func Create(name string) (err error) {
 	return err
 }
 
-func StoreManage_on(name string, s model.Storehouse) (err error) {
-	err = dao.StoreManage_on(name, s)
+func StoreManage_in(name string, s model.Storehouse) (err error) {
+	err = dao.StoreManage_in(name, s)
+	return err
+}
+
+func StoreManage_out(storeName string, name string) (err error) {
+	err = dao.StoreManage_out(storeName, name)
 	return err
 }
