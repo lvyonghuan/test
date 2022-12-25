@@ -1,6 +1,6 @@
 package model
 
-type storehouse struct {
+type Storehouse struct {
 	GoodsName string `json:"goodsName"`
 	GoodsNum  int    `json:"goodsNum"`
 }

@@ -2,8 +2,11 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
+	"strconv"
+	"test/program/2/model"
 	"test/program/2/service"
 	"test/program/2/util"
 )
@@ -39,7 +42,7 @@ func Create(c *gin.Context) {
 	util.RespOK(c)
 }
 
-func GoodsManage(c *gin.Context) {
+func GoodsManage_on(c *gin.Context) {
 	cookie, err := c.Cookie("LoginState")
 	if err != nil && err != sql.ErrNoRows {
 		log.Printf("search message error:%v", err)
@@ -59,8 +62,23 @@ func GoodsManage(c *gin.Context) {
 	StoreHouseName := c.PostForm("storehouse name")
 	GoodsName := c.PostForm("goods name")
 	GoodsNum := c.PostForm("goods num")
+	goodsnum, err := strconv.Atoi(GoodsNum)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	if StoreHouseName == "" || GoodsName == "" || GoodsNum == "" {
 		util.RespParamErr(c)
 		return
 	}
+	err = service.StoreManage_on(StoreHouseName, model.Storehouse{
+		GoodsName: GoodsName,
+		GoodsNum:  goodsnum,
+	})
+	if err != nil && err != sql.ErrNoRows {
+		log.Printf("search message error:%v", err)
+		util.RsepInternalErr(c)
+		return
+	}
+	util.RespOK(c)
 }
