@@ -1,0 +1,37 @@
+不知道怎么把数据库弄git上，就整了个txt文档
+
+create table user
+(
+    id       bigint auto_increment
+        primary key,
+    name     varchar(20) not null,
+    password varchar(20) not null
+);
+↑这是登记用户的表。
+
+create table `borrowing record`
+(
+    id          bigint      not null
+        primary key,
+    name        varchar(20) not null,
+    bookname    varchar(20) null,
+    borrow_date date        not null,
+    borrow_days int         not null,
+    if_exceed   int         not null,
+    return_day  date        null
+);
+这是借阅记录表。记录了借书人、书名、借阅日期、还书期限、还书日期和是否超期。数据库里没有bool类型，所以使用了一个int类型来表达。假若没有超期用0表示。此外int还有个好处，可以用来判断超期了几天。
+
+create table book_info
+(
+    bookname         varchar(20) not null,
+    id               bigint auto_increment
+        primary key,
+    book_num         bigint      not null,
+    author           varchar(20) not null,
+    publishing_house varchar(20) null,
+    publish_date     date        null,
+    storage_place    varchar(20) not null,
+    book_state       int         not null
+);
+图书信息。其中book_state表示图书借阅状态。
